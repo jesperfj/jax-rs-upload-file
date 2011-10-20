@@ -1,14 +1,10 @@
 package com.heroku.gyoza.resources;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
@@ -25,8 +21,9 @@ public class BlobResource {
 		if(fileDetail==null || fileDetail.getFileName()==null) {
 		    return "No filename";
 		}
-		
-		File f = File.createTempFile("gyoza-", "-"+fileDetail.getFileName());
+		System.out.println("Receiving file "+fileDetail.getFileName());
+		File f = new File(fileDetail.getFileName());
+		long ts = System.currentTimeMillis();
 		FileOutputStream out = new FileOutputStream(f);
 
 		byte[] buf = new byte[16384];
@@ -36,9 +33,29 @@ public class BlobResource {
 			len = in.read(buf);
 		}
 		out.close();
-		System.out.println("Wrote file to "+f.getAbsolutePath());
-		return "File created.";
+		System.out.println("Received file "+f.getName()+" in "+(System.currentTimeMillis()-ts)/1000+"s");
+		return "File "+f.getName()+" received\n";
 		
     }
+
+	@GET
+	@Path("/{file}")
+	@Produces("application/octet-stream")
+	public StreamingOutput handleDownload(@PathParam("file") final String file) throws Exception {
+		return new StreamingOutput() {
+			public void write(OutputStream output) throws IOException {
+				System.out.println("File "+file+" requested");
+				long ts = System.currentTimeMillis();
+				byte[] buf = new byte[16384];
+				FileInputStream in = new FileInputStream(new File(file));
+				int len = in.read(buf); 
+				while(len!=-1) {
+					output.write(buf,0,len);
+					len = in.read(buf);
+				}
+				System.out.println("File "+file+" successfully downloaded in "+(System.currentTimeMillis()-ts)/1000+"s");
+			}
+		};
+	}
 	
 }
