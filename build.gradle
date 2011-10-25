@@ -1,0 +1,21 @@
+apply plugin:'java'
+apply plugin:'application'
+
+defaultTasks 'install'
+
+mainClassName = "org.example.Main"
+applicationName = "app"
+
+repositories {
+    mavenCentral()
+    mavenRepo urls: 'http://download.java.net/maven/2'
+}
+
+dependencies {
+    compile 'com.sun.jersey:jersey-grizzly:1.9.1'
+    compile 'com.sun.jersey:jersey-core:1.9.1'
+    compile 'com.sun.jersey.contribs:jersey-multipart:1.9.1'
+    compile 'com.sun.grizzly:grizzly-servlet-webserver:1.9.18-i'
+    compile 'javax.ws.rs:jsr311-api:1.1.1'
+    runtime 'com.sun.jersey:jersey-server:1.9.1'
+}
