@@ -12,15 +12,13 @@ public class Main {
         
         final String baseUri = "http://localhost:"+(System.getenv("PORT")!=null?System.getenv("PORT"):"9998")+"/";
         final Map<String, String> initParams = new HashMap<String, String>();
-        initParams.put("com.sun.jersey.config.property.packages",
-                "com.heroku.gyoza.resources");
+        initParams.put("com.sun.jersey.config.property.packages","com.heroku.gyoza.resources");
 
         System.out.println("Starting grizzly...");
-        SelectorThread threadSelector = GrizzlyWebContainerFactory.create(
-                baseUri, initParams);
+        SelectorThread threadSelector = GrizzlyWebContainerFactory.create(baseUri, initParams);
         System.out.println(
                 String.format(
-                    "Jersey started with WADL available at %sapplication.wadl. Try out %shelloworld",
-                    baseUri, baseUri));
+                        "Jersey started with WADL available at %sapplication.wadl. Try out %shelloworld",
+                        baseUri, baseUri));
     }
 }
