@@ -1,4 +1,4 @@
-package com.heroku.gyoza.resources;
+package org.example;
 
 import java.io.*;
 
